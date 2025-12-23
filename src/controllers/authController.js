@@ -50,11 +50,7 @@ export const postRegister = async (req,res,next) => {
         if(existingUsername) return res.status(400).json({message: "Username already exists."});
 
         //provide random profileImage
-        const profileImage = createAvatar(glass, {
-            seed: username,
-            radius: 50,
-            scale: 50,
-        });
+        const profileImage = `https://api.dicebear.com/9.x/glass/svg?seed=${username}&&radius=50&&scale=50`
 
         //creating new user
         const user = new User({
