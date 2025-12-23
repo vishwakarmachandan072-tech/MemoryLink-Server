@@ -7,7 +7,7 @@ import 'dotenv/config';
 import User from "../Models/User.js";
 
 
-const generateToken = async (userId) => {
+const generateToken = (userId) => {
     try {
         return jwt.sign({userId}, process.env.JWT_SECRET, {expiresIn: "15d"});
     } catch (error) {
@@ -99,7 +99,7 @@ export const postLogin = async (req, res, next) => {
         if(!isPasswordCorrect) return res.status(400).json({message: "Invalid credentials"});
 
         //Generate token
-        const token = await generateToken(existingUser._id);
+        const token = generateToken(existingUser._id);
 
         //Return response
         res.status(200).json({
