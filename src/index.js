@@ -17,3 +17,8 @@ app.use(cors());
 app.use('/api/auth', authRouter);
 
 export default app;
+
+
+app.listen(PORT, ()=> {
+    console.log(`Server is waiting at http://localhost:${PORT}`);
+})
