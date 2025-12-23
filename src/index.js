@@ -9,6 +9,8 @@ import authRouter from './routes/authRouter.js';
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 connectDB();
 
 app.use(express.json());
@@ -16,9 +18,7 @@ app.use(cors());
 
 app.use('/api/auth', authRouter);
 
-export default app;
 
-
-app.listen(PORT, ()=> {
+app.listen(PORT, '0.0.0.0', ()=> {
     console.log(`Server is waiting at http://localhost:${PORT}`);
 })
