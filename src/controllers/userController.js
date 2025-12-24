@@ -49,9 +49,21 @@ export const changeEmail = async (req, res, next) => {
         const result = await User.updateOne({ _id: req.user._id }, { $set: { email } });
         // Verify update success
         if (result.modifiedCount === 0) {
-            return res.status(404).json({ message: "User not found or email is the same", success: false });
+            return res.status(404).json({ 
+                message: "User not found or email is the same", 
+                success: false,
+            });
         }
-        res.json({ message: "Email updated successfully", success: true });
+        res.json({ message: "Email updated successfully", 
+            success: true,
+            user:{
+                id: req.user._id,
+                username : req.user.username,
+                email: req.user.email,
+                profileImage : req.user.profileImage,
+                createdAt: req.user.createdAt,
+            }
+        });
     } catch (error) {
         console.log("Error updating the email:", error);
         res.status(500).json({ message: `Internal server error`, success: false });
