@@ -7,6 +7,6 @@ import{ validateUsername } from '../controllers/userController.js';
 
 const router = express.Router();
 
-router.get('/profile/:id', protectedRoute, validateUsername);
+router.patch('/profile/:id', protectedRoute, validateUsername);
 
 export default router;
