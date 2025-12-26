@@ -60,23 +60,23 @@ export const postRegister = async (req, res, next) => {
             return res.status(400).json({ message: "Please enter a valid email address." });
         }
         //lowercase username
-        const lowerCaseUserName = username.toLowerCase();
+        const lowerCaseUsername = username.toLowerCase();
 
 
         //Check if user exists or not
         const existingEmail = await User.findOne({ email });
         if (existingEmail) return res.status(400).json({ message: "Email already exits." });
 
-        const existingUsername = await User.findOne({ lowerCaseUserName });
+        const existingUsername = await User.findOne({ lowerCaseUsername });
         if (existingUsername) return res.status(400).json({ message: "Username already exists." });
 
         //provide random profileImage
-        const profileImage = `https://api.dicebear.com/9.x/glass/svg?seed=${lowerCaseUserName}&&radius=50&&scale=50`
+        const profileImage = `https://api.dicebear.com/9.x/glass/svg?seed=${lowerCaseUsername}&&radius=50&&scale=50`
 
         
         //creating new user
         const user = new User({
-            username : lowerCaseUserName,
+            username : lowerCaseUsername,
             email,
             password,
             profileImage,
