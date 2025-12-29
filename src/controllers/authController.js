@@ -138,7 +138,7 @@ export const postRegister = async (req, res, next) => {
             gender,
             password,
             profileImage,
-            hasOnBoarded: false,
+            hasOnBoarded: true,
             hasAcceptedTermsAndPrivacy: hasAcceptedTermsAndPrivacyBool,
             termsAcceptedAt: new Date(),
             isVerified,
@@ -257,5 +257,57 @@ export const postRequestOtp = async (req, res, next) => {
         res.status(500).json({
             message: error.message || "Something went wrong", success: false
         }); 
+    }
+}
+
+export const postRequestResendOtp = async (req, res, next) => {
+    try {
+        const { email, purpose } = req.body;
+
+        //Validation
+        if(!email) return res.status(400).json({message: "Email is required.",  success: false,});
+
+        if(!purpose) return res.status(400).json({message: "OTP purpose is required", success: false});
+
+        //Delete old Otp
+        await OtpModel.deleteMany({
+            ...(email && { email }),
+            purpose,
+        });
+
+        //Generate OTP
+        const serverOtp = generateOtp();
+        if(!serverOtp) throw new Error('Failed to generate OTP');
+
+        //hash Otp
+        const otpHash = hashOtp(serverOtp);
+
+        //Set Expiry
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+         //save otp
+        const otp = new OtpModel({
+            email,
+            otpHash,
+            expiresAt,
+            purpose,
+        })
+        await otp.save();
+
+        //send otp
+        const subject = "Your Verification Code (Resent)"
+        const to = email;
+        const html = otpTemplate({ otp: serverOtp, expiresIn: 10 });
+        const response = await sendEmail(subject,to,html);
+
+        return res.status(200).json({
+            message: "New Otp sent successfully",
+            success: true,
+        })
+    } catch (error) {
+        console.log('Error while requesting new otp:', error);
+        res.status(500).json({
+            message: error.message || "Something went wrong", success: false
+        });
     }
 }
