@@ -164,7 +164,7 @@ export const postRegister = async (req, res, next) => {
         })
     } catch (error) {
         console.log("Error registering the user", error);
-        res.status(500).json({ message: `Internal server error` });
+        res.status(500).json({ message: error || `Internal server error` });
     }
 }
 
