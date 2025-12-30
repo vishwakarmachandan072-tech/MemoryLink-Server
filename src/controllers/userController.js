@@ -43,6 +43,8 @@ export const changeUsername = async (req, res, next) => {
             id: updatedUserDoc.id,
             username: updatedUserDoc.username,
             email: updatedUserDoc.email,
+            birthdate: updatedUserDoc.birthdate,
+            gender: updatedUserDoc.gender,
             profileImage: updatedUserDoc.profileImage,
             createdAt: updatedUserDoc.createdAt,
         }
@@ -95,6 +97,8 @@ export const changeEmail = async (req, res, next) => {
             id: updatedUserDoc.id,
             username: updatedUserDoc.username,
             email: updatedUserDoc.email,
+            birthdate: updatedUserDoc.birthdate,
+            gender: updatedUserDoc.gender,
             profileImage: updatedUserDoc.profileImage,
             createdAt: updatedUserDoc.createdAt,
         }
