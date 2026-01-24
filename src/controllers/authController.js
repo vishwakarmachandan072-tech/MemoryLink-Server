@@ -9,6 +9,7 @@ import { generateOtp, hashOtp, verifyOtp } from "../lib/otp.js";
 import OtpModel from "../Models/OtpModel.js"
 import { sendEmail } from "../lib/email/email.js";
 import { otpTemplate } from "../lib/email/templates/otp.js";
+import { waitlistTemplate } from "../lib/email/templates/waitlist.js";
 
 
 const generateToken = (userId) => {
@@ -40,6 +41,15 @@ export const postJoinWaitList = async (req, res, next) => {
 
         //save the user
         await user.save();
+
+        //send otp
+        const namePart = email.split('@')[0];
+        const formattedName = namePart.replace(/[._-]/g, ' ');
+        const subject = "You're on the waitlist"
+        const to = email;
+        const html = waitlistTemplate({ name: formattedName});
+        const response = await sendEmail(subject, to, html);
+
         //return response
         res.status(201).json({
             success: true,
@@ -47,7 +57,7 @@ export const postJoinWaitList = async (req, res, next) => {
         })
     } catch (error) {
         console.log("Error adding the user", error);
-        res.status(500).json({ success:false, message: error.message || "Internal server error" });
+        res.status(500).json({ success: false, message: error.message || "Internal server error" });
     }
 }
 export const postRegister = async (req, res, next) => {
@@ -155,11 +165,11 @@ export const postRegister = async (req, res, next) => {
         const existingEmail = await User.findOne({ email });
         if (!existingEmail) return res.status(400).json({ message: "Please join the waitlist first." });
 
-        if(existingEmail.status === 'waitlist') return res.status(400).json({ message: "Still on waitlist. Please wait for approval. " });
+        if (existingEmail.status === 'waitlist') return res.status(400).json({ message: "Still on waitlist. Please wait for approval. " });
 
-        if(existingEmail.status === 'active') return res.status(400).json({ message: "Email already exists. " });
+        if (existingEmail.status === 'active') return res.status(400).json({ message: "Email already exists. " });
 
-        
+
 
 
         const existingUsername = await User.findOne({ lowerCaseUsername });
@@ -205,7 +215,7 @@ export const postRegister = async (req, res, next) => {
             termsAcceptedAt: new Date(),
             isVerified,
             verifiedAt: isVerified ? new Date() : null,
-        },{ new: true })
+        }, { new: true })
 
         //save the user
         await user.save();
