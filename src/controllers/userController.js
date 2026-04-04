@@ -181,7 +181,7 @@ export const changeGender = async (req, res, next) => {
 
 export const searchUser = async (req,res,next) => {
     try {
-        const { username } = req.body; 
+        const { username } = req.body;
 
         const lowerCaseUsername = username.toLowerCase();
 
