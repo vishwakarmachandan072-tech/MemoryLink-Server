@@ -4,7 +4,7 @@ export const createMemory = async (req, res, next) => {
     try {
         const { timelineId, title, description, mediaUrl, mediaType } = req.body;
 
-        if (!timelineId || !title || !description || !mediaUrl || !mediaType) return res.status(400).json({ message: "All fiels are required" })
+        if (!timelineId || !title || !mediaUrl || !mediaType) return res.status(400).json({ message: "All fiels are required" })
         // const timelineId = req.params.timelineId;
         const newMemory = new Memory({
             timelineId,
